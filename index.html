@@ -1064,8 +1064,7 @@
         </div>
     </div>
 
-    <!-- 7. ADMIN DASHBOARD VIEW -->
-    <div id="admin-dashboard-view" class="page-view">
+   <div id="admin-dashboard-view" class="page-view">
         <div style="display:flex; justify-content:space-between; align-items:center; width:100%; border-bottom:2px solid #edf2f7; padding-bottom:15px; margin-bottom:20px;">
             <h2>CRM Admin Control Panel</h2>
             <button onclick="window.logout()" style="background:#dc2626; color:white; border:none; padding:8px 16px; border-radius:5px; font-weight:600; cursor:pointer;">Logout</button>
@@ -1075,15 +1074,16 @@
                 <a id="nav-dash" onclick="window.switchAdminTab('dash')" class="active">Dashboard</a>
                 <a id="nav-leads" onclick="window.switchAdminTab('leads')">Manage Leads</a>
                 <a id="nav-contactforms" onclick="window.switchAdminTab('contactforms')">Contact Form Enquiries</a>
+                <a id="nav-users" onclick="window.switchAdminTab('users')">Kanban View</a>
+                <a id="nav-reports" onclick="window.switchAdminTab('reports')">Reports</a>
             </div>
             <div class="crm-content">
-                <!-- Dashboard Tab -->
                 <div id="tab-dash">
                     <h3>Overview Analytics</h3>
                     <p style="margin-top:10px;">Total Published Leads: <span id="dash-total" style="font-weight:700; color:var(--primary);">0</span></p>
                     <p>Active Layout Status Channels: <span id="dash-active" style="font-weight:700; color:green;">0</span></p>
                 </div>
-                <!-- Leads Tab -->
+                
                 <div id="tab-leads" class="hidden">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                         <h3>Published Leads Matrix</h3>
@@ -1096,18 +1096,51 @@
                         <tbody id="admin-published-leads-table"></tbody>
                     </table>
                 </div>
-                <!-- Contact submissions Tab -->
+                
                 <div id="tab-contactforms" class="hidden">
                     <h3>Contact Enquiry Submissions Logs</h3>
                     <table class="crm-table">
                         <thead>
-                            <tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Status</th><th>Update Actions</th></tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Message</th>
+                                <th>Status</th>
+                                <th>Update Actions</th>
+                            </tr>
                         </thead>
-                        <tbody id="admin-contact-forms-table"></tbody>
+                        <tbody id="admin-contact-forms-table">
+                            <tr><td colspan="6" style="text-align:center; padding:20px;">Loading active records...</td></tr>
+                        </tbody>
                     </table>
+                </div>
+
+                <div id="tab-users" class="hidden">
+                    <h3>Lead Stage Pipeline (Kanban)</h3>
+                    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:15px; margin-top:15px;">
+                        <div style="background:#f1f5f9; padding:10px; border-radius:6px;"><h4>NEW</h4><div id="kb-new"></div></div>
+                        <div style="background:#fef3c7; padding:10px; border-radius:6px;"><h4>CONTACTED</h4><div id="kb-contacted"></div></div>
+                        <div style="background:#f3e8ff; padding:10px; border-radius:6px;"><h4>IN PROGRESS</h4><div id="kb-inprogress"></div></div>
+                        <div style="background:#e6f4ea; padding:10px; border-radius:6px;"><h4>CONVERTED</h4><div id="kb-converted"></div></div>
+                        <div style="background:#fee2e2; padding:10px; border-radius:6px;"><h4>LOST</h4><div id="kb-lost"></div></div>
+                    </div>
+                </div>
+
+                <div id="tab-reports" class="hidden">
+                    <h3>Analytical Systems Report Matrix</h3>
+                    <p style="margin-top:10px;">Total Analytics Logs: <span id="rep-total">0</span></p>
+                    <p>Active System Funnels: <span id="rep-active">0</span></p>
+                    <p>Bypassed Dropouts (Lost): <span id="rep-inactive">0</span></p>
+                    <div style="display:flex; gap:20px; align-items:flex-end; height:150px; margin-top:20px; border-bottom:2px solid #ccc; padding-bottom:10px;">
+                        <div id="chart-total" style="width:50px; background:#2563eb; color:white; text-align:center; transition: height 0.3s ease;">Tot</div>
+                        <div id="chart-active" style="width:50px; background:#16a34a; color:white; text-align:center; transition: height 0.3s ease;">Act</div>
+                        <div id="chart-inactive" style="width:50px; background:#dc2626; color:white; text-align:center; transition: height 0.3s ease;">Lst</div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
         <!-- Add Lead Modal Overlay UI Frame -->
         <div id="add-lead-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center; z-index:99999;">
