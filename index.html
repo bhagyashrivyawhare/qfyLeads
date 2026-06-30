@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QFY Leads | Premium Lead Generation</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <style>
+        /* ==========================================================================
+           01. DESIGN SYSTEM & RESET
+           ========================================================================== */
+        :root {
+            --primary: #103b73;
+            --primary-light: #184e92;
+            --primary-dark: #0f274e;
+            --accent: #7fd8ff;
+            --accent-dark: #2159a8;
+            --text-dark: #222222;
+            --text-muted: #666666;
+            --bg-light: #f8fbff;
+            --bg-alt: #f6f9fd;
+            --white: #ffffff;
+            
+            /* Spacing & Layout */
+            --section-padding: 100px 7%;
+            --container-gap: 30px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            
+            /* Global Animations & Shadows */
+            --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--white);
+            overflow-x: hidden;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           02. GLOBAL UTILITIES & LAYOUTS
+           ========================================================================== */
+        .section {
+            padding: var(--section-padding);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title p {
+            max-width: 700px;
+            margin: auto;
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        /* Buttons */
+        .primary-btn, .secondary-btn, .about-btn, .contact-btn, .contact-form button {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 40px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .primary-btn {
+            background: var(--white);
+            color: var(--primary-light);
+        }
+
+        .secondary-btn {
+            border: 2px solid var(--white);
+            color: var(--white);
+            background: transparent;
+        }
+
+        .primary-btn:hover, .secondary-btn:hover, .about-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .secondary-btn:hover {
+            background: var(--white);
+            color: var(--primary-light);
+        }
+
+        /* System Pages View Utility */
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+        #contact-view.active, #admin-login-view.active { display: flex; justify-content: center; align-items: center; }
+        #admin-dashboard-view.active { display: flex; }
+
+        /* ==========================================================================
+           03. CORE UI COMPONENTS (LOADER, PROGRESS, SCROLL, FLOATING SHAPES)
+           ========================================================================== */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #123f7a;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 999999;
+            transition: opacity 0.6s ease;
+        }
+
+        .loader-circle {
+            width: 70px; height: 70px;
+            border: 6px solid rgba(255, 255, 255, .2);
+            border-top: 6px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0; height: 4px;
+            background: #6ed0ff;
+            width: 0%;
+            z-index: 999999;
+        }
+
+        .scrollTop {
+            position: fixed;
+            right: 25px; bottom: 110px;
+            width: 50px; height: 50px;
+            background: var(--primary-light);
+            color: var(--white);
+            display: flex; justify-content: center; align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            opacity: 0; visibility: hidden;
+            transition: var(--transition);
+            z-index: 999;
+            box-shadow: var(--shadow-md);
+        }
+
+        .scrollTop.active { opacity: 1; visibility: visible; }
+        .scrollTop:hover { transform: translateY(-5px); background: var(--primary); }
+
+        .whatsapp {
+            position: fixed;
+            right: 25px; bottom: 25px;
+            width: 65px; height: 65px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            display: flex; justify-content: center; align-items: center;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            transition: var(--transition);
+        }
+
+        .whatsapp i {
+            width: 42px; height: 42px;
+            background: var(--primary-dark);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 22px;
+            transition: var(--transition);
+        }
+
+        .whatsapp:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, .22);
+        }
+
+        .whatsapp:hover i { background: #25D366; transform: rotate(10deg); }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Floating Shapes Graphic Background Elements */
+        .shape { position: absolute; border-radius: 50%; opacity: .12; animation: float 8s infinite ease-in-out; pointer-events: none; }
+        .shape1 { width: 160px; height: 160px; background: #6dd6ff; top: 120px; right: 10%; }
+        .shape2 { width: 80px; height: 80px; background: var(--white); bottom: 15%; left: 8%; animation-delay: 2s; }
+        .shape3 { width: 220px; height: 220px; background: #8fdcff; bottom: -60px; right: -40px; animation-delay: 4s; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+
+        /* ==========================================================================
+           04. HEADER NAVIGATION
+           ========================================================================== */
+        #main-header {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 85px;
+            padding: 0 7%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(16, 55, 118, .95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 999;
+            transition: var(--transition);
+        }
+
+        #main-header.sticky {
+            height: 70px;
+            background: var(--primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--white);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .logo span { color: var(--accent); }
+
+        #main-header nav {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+
+        #main-header nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        #main-header nav a:hover { color: var(--accent); }
+
+        .contact-btn {
+            padding: 11px 26px;
+            background: var(--white);
+            color: var(--primary-light);
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        .contact-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .menu-btn { display: none; color: var(--white); font-size: 26px; cursor: pointer; }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 85px; left: 0; width: 100%;
+            background: var(--primary-light);
+            padding: 15px 7%;
+            box-shadow: var(--shadow-lg);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #main-header.sticky .mobile-menu { top: 70px; }
+        .mobile-menu a { display: block; color: var(--white); padding: 14px 0; font-size: 16px; font-weight: 500; text-decoration: none; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .mobile-menu a:last-child { border-bottom: none; }
+        .mobile-menu.show { display: block; }
+
+        /* ==========================================================================
+           05. HERO SECTION
+           ========================================================================== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 140px 7% 80px;
+            background: linear-gradient(rgba(16, 55, 118, .90), rgba(16, 55, 118, .90)), url("https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2000") center/cover no-repeat;
+        }
+
+        .hero-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-left h1 {
+            font-size: 56px;
+            line-height: 1.15;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .hero-left h1 span { color: #99dcff; }
+
+        .hero-left p {
+            color: #d8ebff;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        .lead-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 35px;
+        }
+
+        .lead-grid div {
+            color: var(--white);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .lead-grid i {
+            margin-right: 12px;
+            color: var(--accent);
+            font-size: 16px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+        }
+
+        .hero-right {
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-card {
+            width: 100%;
+            max-width: 460px;
+            background: rgba(255, 255, 255, .08);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, .2);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-card img {
+            width: 100%;
+            display: block;
+            border-radius: var(--radius-md);
+        }
+
+        /* ==========================================================================
+           06. INDUSTRIES WE SERVE
+           ========================================================================== */
+        .industries { background: var(--bg-light); }
+        .industry-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--container-gap);
+        }
+
+        .industry-card {
+            background: var(--white);
+            padding: 35px 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-align: center;
+            border-bottom: 3px solid transparent;
+        }
+
+        .industry-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+            border-bottom: 3px solid var(--accent-dark);
+        }
+
+        .industry-card i {
+            font-size: 44px;
+            color: var(--accent-dark);
+            margin-bottom: 20px;
+        }
+
+        .industry-card h3 {
+            margin-bottom: 12px;
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .industry-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ==========================================================================
+           07. HOW IT WORKS (STEPS)
+           ========================================================================== */
+        .steps { background: var(--white); }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--container-gap);
+        }
+
+        .step-card {
+            background: var(--white);
+            padding: 35px 20px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .step-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+
+        .step-number {
+            width: 55px; height: 55px;
+            background: var(--accent-dark);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 auto 22px;
+            box-shadow: 0 4px 10px rgba(33, 89, 168, 0.3);
+        }
+
+        .step-card h3 { margin-bottom: 12px; color: var(--primary); font-size: 18px; font-weight: 700; }
+        .step-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+        /* ==========================================================================
+           08. WHY CHOOSE US
+           ========================================================================== */
+        .why { background: var(--bg-alt); }
+        .why-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .features { display: flex; flex-direction: column; gap: 20px; }
+        .feature {
+            display: flex;
+            gap: 20px;
+            background: var(--white);
+            padding: 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .feature:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .feature i { font-size: 26px; color: var(--accent-dark); margin-top: 3px; }
+        .feature h4 { margin-bottom: 8px; font-size: 19px; color: var(--primary); font-weight: 700; }
+        .feature p { color: var(--text-muted); line-height: 1.6; font-size: 14px; }
+
+        .blue-box {
+            background: linear-gradient(135deg, #2159a8, #1b4f94);
+            padding: 50px;
+            border-radius: var(--radius-lg);
+            color: var(--white);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .blue-box h2 { font-size: 34px; margin-bottom: 20px; line-height: 1.3; font-weight: 800; }
+        .blue-box p { line-height: 1.8; margin-bottom: 30px; opacity: 0.9; font-weight: 300; }
+        .blue-box a {
+            display: inline-block;
+            padding: 14px 35px;
+            background: var(--white);
+            color: #1d58aa;
+            font-weight: 700;
+            border-radius: 40px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .blue-box a:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+        /* ==========================================================================
+           09. ABOUT COMPANY
+           ========================================================================== */
+        .about-company {
+            background: #174b92;
+            padding: 100px 7%;
+            color: var(--white);
+        }
+
+        .about-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-image img {
+            width: 100%;
+            display: block;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .about-text span {
+            font-size: 14px;
+            letter-spacing: 2.5px;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .about-text h2 { font-size: 44px; margin: 15px 0 25px; line-height: 1.25; font-weight: 800; }
+        .about-text p { line-height: 1.8; opacity: .9; margin-bottom: 20px; font-weight: 300; }
+        
+        .about-btn {
+            background: var(--white);
+            color: var(--primary-light);
+            margin-top: 15px;
+        }
+
+        /* ==========================================================================
+           10. FREQUENTLY ASKED QUESTIONS
+           ========================================================================== */
+        .faq { padding: var(--section-padding); background: var(--white); }
+        .faq-item {
+            background: var(--bg-light);
+            margin-bottom: 20px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(33, 89, 168, 0.05);
+            transition: var(--transition);
+        }
+
+        .faq-question {
+            padding: 22px 25px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 17px;
+            color: var(--primary);
+            user-select: none;
+            transition: var(--transition);
+        }
+
+        .faq-question span {
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--accent-dark);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 0 25px 22px;
+            line-height: 1.8;
+            color: var(--text-muted);
+            font-size: 15px;
+            border-top: 1px solid transparent;
+        }
+
+        .faq-item.active { background: var(--white); box-shadow: var(--shadow-md); border-color: rgba(33, 89, 168, 0.15); }
+        .faq-item.active .faq-question { color: var(--accent-dark); }
+        .faq-item.active .faq-question span { transform: rotate(45deg); }
+        .faq-item.active .faq-answer { display: block; }
+
+        /* ==========================================================================
+           11. BENEFITS (BUY HIGH QUALITY LEADS)
+           ========================================================================== */
+        .benefits { padding: var(--section-padding); background: var(--bg-light); }
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--container-gap);
+        }
+
+        .benefit-card {
+            background: var(--white);
+            padding: 40px 25px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .benefit-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); }
+        .benefit-card i { font-size: 42px; color: var(--accent-dark); margin-bottom: 22px; }
+        .benefit-card h3 { margin-bottom: 12px; color: var(--primary); font-size: 19px; font-weight: 700; }
+        .benefit-card p { font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+
+        /* ==========================================================================
+           12. CONTACT FORM & SYSTEM PROMPTS
+           ========================================================================== */
+        .contact {
+            padding: 100px 7%;
+            background: linear-gradient(rgba(19, 62, 119, .93), rgba(19, 62, 119, .93)), url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1800') center/cover no-repeat;
+            color: var(--white);
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .contact-info h2 { font-size: 42px; margin-bottom: 20px; font-weight: 800; line-height: 1.3; }
+        .contact-info p { line-height: 1.8; margin-bottom: 35px; opacity: 0.9; font-weight: 300; }
+        .contact-list { display: flex; flex-direction: column; gap: 22px; }
+        .contact-list div { display: flex; gap: 15px; align-items: center; }
+        .contact-list i { font-size: 20px; color: var(--accent); width: 25px; }
+        .contact-list span { font-weight: 500; }
+
+        .contact-form {
+            background: var(--white);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 15px 18px;
+            margin-bottom: 20px;
+            border: 1px solid #dddddd;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            color: var(--text-dark);
+            background: #fafafa;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: var(--accent-dark);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(33, 89, 168, 0.11);
+        }
+
+        .contact-form button {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-light);
+            color: var(--white);
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+        }
+
+        .contact-form button:hover { background: var(--primary); transform: translateY(-2px); }
+
+        /* ==========================================================================
+           13. CLIENT TESTIMONIALS SLIDER
+           ========================================================================== */
+        .testimonials { padding: 100px 7%; background: var(--white); }
+        .testimonial-slider { position: relative; overflow: hidden; padding: 20px 0; }
+        .testimonial-track { display: flex; gap: 25px; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Fixed width architecture matches slider algorithm perfectly (380px wide + 25px gap = 405px layout block) */
+        .testimonial-card {
+            min-width: 380px;
+            max-width: 380px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 35px;
+            box-shadow: var(--shadow-md);
+            border-top: 5px solid var(--primary-light);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .testimonial-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+        .quote { font-size: 40px; color: var(--primary-light); margin-bottom: 5px; line-height: 1; }
+        .stars { color: #FFC107; margin-bottom: 15px; font-size: 16px; letter-spacing: 2px; }
+        .testimonial-card p { color: var(--text-muted); line-height: 1.7; font-size: 14px; min-height: 130px; }
+        .client { margin-top: 25px; border-top: 1px solid #eeeeee; padding-top: 20px; }
+        .client h4 { color: var(--primary); margin-bottom: 4px; font-weight: 700; font-size: 16px; }
+        .client span { display: block; color: var(--text-dark); font-size: 13px; font-weight: 500; }
+        .client small { color: var(--text-muted); font-size: 12px; }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            width: 45px; height: 45px;
+            border: none; border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--white);
+            cursor: pointer;
+            z-index: 5;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .slider-btn:hover { background: var(--primary); transform: translateY(-50%) scale(1.05); }
+        .prev { left: 5px; }
+        .next { right: 5px; }
+
+        /* ==========================================================================
+           14. COUNTERS SECTION
+           ========================================================================== */
+        .counter-section { padding: 80px 7%; background: var(--primary-light); color: var(--white); }
+        .counter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center; }
+        .counter-box { padding: 35px 20px; border: 1px solid rgba(255, 255, 255, .15); border-radius: var(--radius-md); transition: var(--transition); }
+        .counter-box:hover { transform: translateY(-6px); background: rgba(255, 255, 255, .06); border-color: rgba(255,255,255,0.3); }
+        .counter { font-size: 48px; font-weight: 800; margin-bottom: 5px; color: var(--white); }
+        .counter-box h3 { font-size: 16px; font-weight: 500; opacity: 0.95; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* ==========================================================================
+           15. FOOTER ARCHITECTURE
+           ========================================================================== */
+        footer { background: var(--primary-dark); color: #dbe8ff; padding: 80px 7% 30px; }
+        .footer-grid { display: grid; grid-template-columns: 1.5fr 0.8fr 0.9fr 0.8fr; gap: 40px; margin-bottom: 60px; }
+        .footer-grid h3 { margin-bottom: 25px; color: var(--white); font-size: 18px; font-weight: 700; }
+        .footer-grid p { font-size: 14px; line-height: 1.7; opacity: 0.85; }
+        .footer-grid a { display: block; color: #dbe8ff; text-decoration: none; margin-bottom: 14px; font-size: 14px; opacity: 0.85; transition: var(--transition); }
+        .footer-grid a:hover { color: var(--white); padding-left: 6px; opacity: 1; }
+        .footer-bottom { border-top: 1px solid rgba(255, 255, 255, .12); padding-top: 30px; text-align: center; font-size: 14px; opacity: 0.7; }
+
+        /* ==========================================================================
+           16. MEDIA RESPONSIVE BREAKPOINTS
+           ========================================================================== */
+        @media (max-width: 1200px) {
+            .industry-grid { grid-template-columns: repeat(3, 1fr); }
+            .benefit-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .section { padding: 80px 5%; }
+            .section-title h2 { font-size: 36px; }
+            #main-header nav, .contact-btn { display: none; }
+            .menu-btn { display: block; }
+            .hero-container { grid-template-columns: 1fr; gap: 50px; }
+            .hero-left { text-align: center; }
+            .hero-left h1 { font-size: 42px; }
+            .hero-btns { justify-content: center; }
+            .lead-grid { max-width: 500px; margin: 0 auto 30px; }
+            .industry-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: 1fr; gap: 20px; }
+            .why-wrapper, .about-wrapper, .contact-wrapper { grid-template-columns: 1fr; gap: 45px; }
+            .counter-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .testimonial-card { min-width: 100%; max-width: 100%; }
+            .slider-btn { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .section-title h2 { font-size: 30px; }
+            .industry-grid, .benefit-grid, .counter-grid, .footer-grid { grid-template-columns: 1fr; }
+            .lead-grid { grid-template-columns: 1fr; max-width: 280px; }
+            .contact-form { padding: 25px; }
+            .blue-box { padding: 30px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <header id="main-header">
+        <div class="logo" onclick="window.navigate('home-view')">Qfy <span>Leads</span></div>
+        <nav>
+            <a onclick="window.navigate('home-view')">Home</a>
+            <a onclick="window.navigate('public-leads-view')">Leads</a>
+            <a onclick="window.navigate('service-view')">Services</a>
+            <a onclick="window.navigate('about-view')">About</a>
+        </nav>
+        <a onclick="window.navigate('contact-view')" class="contact-btn">Contact</a>
+
+        <div class="menu-btn" id="menuBtn">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <a onclick="window.navigate('home-view')">Home</a>
+            <a onclick="window.navigate('public-leads-view')">Leads</a>
+            <a onclick="window.navigate('service-view')">Services</a>
+            <a onclick="window.navigate('about-view')">About</a>
+            <a onclick="window.navigate('contact-view')">Contact</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+
+        <div class="hero-container">
+            <div class="hero-left">
+                <h1>Unlock The Magic Of <span>High Converting Leads</span></h1>
+                <p>Generate premium, TCPA-compliant, verified business leads that help you grow faster with better conversions and predictable sales.</p>
+
+                <div class="lead-grid">
+                    <div><i class="fa-solid fa-check"></i>Mass Tort</div>
+                    <div><i class="fa-solid fa-check"></i>Insurance</div>
+                    <div><i class="fa-solid fa-check"></i>Healthcare</div>
+                    <div><i class="fa-solid fa-check"></i>Legal</div>
+                    <div><i class="fa-solid fa-check"></i>Finance</div>
+                    <div><i class="fa-solid fa-check"></i>Home Improvement</div>
+                    <div><i class="fa-solid fa-check"></i>Education</div>
+                    <div><i class="fa-solid fa-check"></i>Solar Leads</div>
+                </div>
+
+                <div class="hero-btns">
+                    <a href="#" class="primary-btn">Get Started</a>
+                    <a href="#" class="secondary-btn">Learn More</a>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <div class="hero-card">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200" alt="QFY Leads">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section industries">
+        <div class="section-title">
+            <h2>Industries We Serve</h2>
+            <p>Performance-driven lead generation across multiple high-converting industries.</p>
+        </div>
+
+        <div class="industry-grid">
+            <div class="industry-card">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <h3>Legal</h3>
+                <p>Mass Tort, Personal Injury, Employment and Consumer Leads.</p>
+            </div>
+            <div class="industry-card">
+                <i class="fa-solid fa-heart-pulse"></i>
+                <h3>Healthcare</h3>
+                <p>Medical, Medicare, Insurance and Patient Acquisition.</p>
+            </div>
+            <div class="industry-card">
+                <i class="fa-solid fa-building-columns"></i>
+                <h3>Finance</h3>
+                <p>MCA, Loans, Credit Repair, Debt Relief and Banking.</p>
+            </div>
+            <div class="industry-card">
+                <i class="fa-solid fa-house"></i>
+                <h3>Home Improvement</h3>
+                <p>Roofing, Windows, Solar, HVAC and Remodeling.</p>
+            </div>
+            <div class="industry-card">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <h3>Education</h3>
+                <p>Universities, Online Courses and Student Leads.</p>
+            </div>
+            <div class="industry-card">
+                <i class="fa-solid fa-industry"></i>
+                <h3>Manufacturing</h3>
+                <p>B2B Manufacturing and Industrial Sales Leads.</p>
+            </div>
+            <div class="industry-card">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h3>Insurance</h3>
+                <p>Auto, Health, Medicare, Life and Home Insurance.</p>
+            </div>
+            <div class="industry-card">
+                <i class="fa-solid fa-microchip"></i>
+                <h3>Technology</h3>
+                <p>Software, SaaS, AI and Enterprise IT Solutions.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section steps">
+        <div class="section-title">
+            <h2>How It Works</h2>
+            <p>A simple process designed to help you receive quality leads quickly.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Select Lead Type</h3>
+                <p>Choose the business category that matches your campaign.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Apply Targeting</h3>
+                <p>Select geography, demographics and customer preferences.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Generate Leads</h3>
+                <p>Our AI and marketing systems collect verified prospects.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Verify Quality</h3>
+                <p>Every lead is checked before delivery.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h3>Scale Faster</h3>
+                <p>Receive leads instantly and grow your sales pipeline.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section why">
+        <div class="section-title">
+            <h2>Why Businesses Choose QFY Leads</h2>
+            <p>Trusted by agencies, enterprises and growing startups worldwide.</p>
+        </div>
+
+        <div class="why-wrapper">
+            <div class="features">
+                <div class="feature">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                        <h4>100% TCPA Compliant</h4>
+                        <p>Every campaign follows industry standards and compliance.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div>
+                        <h4>Real-Time Lead Delivery</h4>
+                        <p>Receive fresh, high-intent prospects within minutes.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <div>
+                        <h4>High Conversion Rate</h4>
+                        <p>Optimized campaigns designed to improve ROI.</p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <i class="fa-solid fa-headset"></i>
+                    <div>
+                        <h4>Dedicated Support</h4>
+                        <p>Your account manager is always available to help.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="blue-box">
+                <h2>Built for High-Converting Campaigns</h2>
+                <p>We combine AI, performance marketing and verified consumer data to deliver scalable lead generation solutions for agencies, startups and enterprise businesses.</p>
+                <a href="#">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-company">
+        <div class="about-wrapper">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200" alt="About Corporate Strategy">
+            </div>
+
+            <div class="about-text">
+                <span>Who We Are</span>
+                <h2>A Team Focused on Predictable Lead Growth</h2>
+                <p>QFY Leads helps businesses generate premium verified leads through AI-powered marketing, real-time targeting, and data-driven campaigns.</p>
+                <p>We work with agencies, startups and enterprises across healthcare, legal, finance, education, insurance and technology industries.</p>
+                <a href="#" class="about-btn">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know before buying leads.</p>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                How quickly will I receive my leads?
+                <span>+</span>
+            </div>
+            <div class="faq-answer">
+                Most campaigns begin delivering verified leads within minutes after approval.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Are your leads exclusive?
+                <span>+</span>
+            </div>
+            <div class="faq-answer">
+                Yes. We provide exclusive and shared lead options depending on your campaign.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                Can I target specific locations?
+                <span>+</span>
+            </div>
+            <div class="faq-answer">
+                Yes. You can target by city, state, ZIP code, age, income and many other filters.
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="section-title">
+            <h2>Buy High-Quality Leads For Your Business</h2>
+            <p>High-converting verified leads designed to increase your sales.</p>
+        </div>
+
+        <div class="benefit-grid">
+            <div class="benefit-card">
+                <i class="fa-solid fa-bolt"></i>
+                <h3>Fast Delivery</h3>
+                <p>Receive leads instantly after campaign activation.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fa-solid fa-circle-check"></i>
+                <h3>Verified Data</h3>
+                <p>Every lead passes quality and compliance checks.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fa-solid fa-shield"></i>
+                <h3>TCPA Compliant</h3>
+                <p>Built according to industry standards.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fa-solid fa-chart-line"></i>
+                <h3>Higher ROI</h3>
+                <p>More conversions with better quality prospects.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <h2>Unlock High-Converting Verified Leads</h2>
+                <p>Ready to grow your business? Let's build a lead generation strategy tailored to your goals.</p>
+
+                <div class="contact-list">
+                    <div>
+                        <i class="fa-solid fa-phone"></i>
+                        <span>+91 9876543210</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>info@qfyleads.com</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>India</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <input type="text" placeholder="Full Name">
+                <input type="email" placeholder="Email Address">
+                <input type="text" placeholder="Phone Number">
+                <textarea rows="5" placeholder="Your Message"></textarea>
+                <button type="submit">Send Message</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials reveal">
+        <div class="section-title">
+            <h2>What Our Clients Say</h2>
+            <p>Trusted by businesses across multiple industries.</p>
+        </div>
+
+        <div class="testimonial-slider">
+            <button class="slider-btn prev" aria-label="Previous slide">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="testimonial-track" id="testimonialTrack">
+                </div>
+
+            <button class="slider-btn next" aria-label="Next slide">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>QFY Leads</h3>
+                <p style="margin-top: 10px;">Premium Lead Generation Company helping businesses generate predictable revenue through high-converting verified leads.</p>
+            </div>
+
+            <div>
+                <h3>Quick Links</h3>
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Services</a>
+                <a href="#">Contact</a>
+            </div>
+
+            <div>
+                <h3>Industries</h3>
+                <a href="#">Healthcare</a>
+                <a href="#">Insurance</a>
+                <a href="#">Finance</a>
+                <a href="#">Legal</a>
+            </div>
+
+            <div>
+                <h3>Contact</h3>
+                <p style="margin-bottom: 10px;">+91 9876543210</p>
+                <p style="margin-bottom: 10px;">info@qfyleads.com</p>
+                <p>India</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2026 QFY Leads. All Rights Reserved.
+        </div>
+    </footer>
+
+    <div class="scrollTop" id="scrollTop">
+        <i class="fa-solid fa-arrow-up"></i>
+    </div>
+
+    <a href="https://wa.me/918878787420?text=Hello%20QFY%20Leads,%0A%0AI%20am%20interested%20in%20your%20lead%20generation%20services.%20Please%20share%20more%20details.%20Thank%20you!"
+        class="whatsapp" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        const menuBtn = document.getElementById("menuBtn");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const progressBar = document.getElementById("progressBar");
+        const loader = document.getElementById("loader");
+        const scrollTop = document.getElementById("scrollTop");
+
+        // UI Initialization & Loading Window
+        window.onload = () => {
+            setTimeout(() => {
+                loader.style.opacity = "0";
+                setTimeout(() => { loader.style.display = "none"; }, 500);
+            }, 1200);
+        };
+
+        // Header Responsive Actions
+        menuBtn.addEventListener("click", () => {
+            mobileMenu.classList.toggle("show");
+        });
+
+        // Global Layout Adjustments On Window Offset Shift
+        window.addEventListener("scroll", () => {
+            const header = document.getElementById("main-header");
+            
+            // Toggle Header Transition Matrix
+            if (window.scrollY > 40) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+
+            // Scroll Top Button Threshold Visibility Trigger
+            if (window.scrollY > 400) {
+                scrollTop.classList.add("active");
+            } else {
+                scrollTop.classList.remove("active");
+            }
+
+            // Linear Progress bar updates
+            let scrollHeight = document.body.scrollHeight - window.innerHeight;
+            let currentProgress = (window.scrollY / scrollHeight) * 100;
+            progressBar.style.width = currentProgress + "%";
+            
+            reveal();
+        });
+
+        // FAQ Interactive Handlers
+        document.querySelectorAll(".faq-question").forEach(item => {
+            item.onclick = () => {
+                item.parentElement.classList.toggle("active");
+            };
+        });
+
+        // Scroll Top Target Behavior
+        scrollTop.onclick = () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+
+        // Scroll Reveal Animations Engine
+        function reveal() {
+            document.querySelectorAll(".reveal").forEach(box => {
+                const top = box.getBoundingClientRect().top;
+                if (top < window.innerHeight - 120) {
+                    box.classList.add("active");
+                }
+            });
+        }
+        reveal();
+
+        // Clients Data Array Structure
+        const testimonials = [
+            {
+                message: "QFY Leads helped us reach highly targeted insurance, medical, and telecom clients with excellent accuracy and compliance.",
+                name: "Murtaza Siyahi",
+                role: "Business Owner, Tasaif LLC",
+                location: "Wyoming, United States",
+            },
+            {
+                message: "The quality of leads provided helped our funding campaigns perform better. Strong understanding of financial services.",
+                name: "Bryan J Duelley",
+                role: "Owner, MY Company Funding LLC",
+                location: "Texas, United States",
+            },
+            {
+                message: "QFY Leads supported our expansion across medical and legal translation services with relevant and well-targeted leads.",
+                name: "Yoni Ohayon",
+                role: "CEO, eTranslationServices.com",
+                location: "United States",
+            },
+            {
+                message: "Consistent lead delivery and strong campaign understanding helped scale our healthcare-focused call center operations.",
+                name: "William Marroquin",
+                role: "CEO, HealthBrokersPro",
+                location: "California, United States",
+            },
+            {
+                message: "Their intent-based targeting helped accelerate conversions across finance and debt-related services.",
+                name: "Alex Frias",
+                role: "Investor & Entrepreneur, Hilldale Corp",
+                location: "United States",
+            },
+            {
+                message: "Reliable healthcare leads suitable for telemarketing and online outreach. Smooth coordination throughout.",
+                name: "Jonatan Arano",
+                role: "General Manager, Trusted Medical Providers",
+                location: "Los Angeles Metro Area",
+            }
+        ];
+
+        // Slide Track Rendering Engine
+        const track = document.getElementById("testimonialTrack");
+        track.innerHTML = testimonials.map(t => `
+            <div class="testimonial-card">
+                <div>
+                    <div class="quote"><i class="fa-solid fa-quote-left"></i></div>
+                    <div class="stars">★★★★★</div>
+                    <p>${t.message}</p>
+                </div>
+                <div class="client">
+                    <h4>${t.name}</h4>
+                    <span>${t.role}</span>
+                    <small>${t.location}</small>
+                </div>
+            </div>
+        `).join("");
+
+        // Slide Transform Positioning Matrix
+        let index = 0;
+        const next = document.querySelector(".next");
+        const prev = document.querySelector(".prev");
+        const cardWidth = 405; // 380px (Width) + 25px (Gap) = 405px displacement path
+
+        next.addEventListener("click", () => {
+            index = (index < testimonials.length - 1) ? index + 1 : 0;
+            track.style.transform = `translateX(-${index * cardWidth}px)`;
+        });
+
+        prev.addEventListener("click", () => {
+            index = (index > 0) ? index - 1 : testimonials.length - 1;
+            track.style.transform = `translateX(-${index * cardWidth}px)`;
+        });
+
+        // Loop Slider Loop Automation
+        setInterval(() => {
+            index = (index + 1) % testimonials.length;
+            track.style.transform = `translateX(-${index * cardWidth}px)`;
+        }, 4000);
+    </script>
+
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
