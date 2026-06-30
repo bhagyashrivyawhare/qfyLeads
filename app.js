@@ -28,7 +28,7 @@ try {
 // Global Variables
 let allPublishedLeads = [];
 let currentCategoryFilter = 'All';
-window.currentEditingLeadId = null; // ग्लोबल व्हेरिएबल फिक्स केले
+window.currentEditingLeadId = null;
 
 // ==========================================
 // 02. CORE APPLICATION ROUTING (SPA Engine)
@@ -201,9 +201,8 @@ window.switchAdminTab = function (tabName) {
     if (tabName === 'reports') window.loadAdminReports();
 };
 
-// नवीन लीड ॲड करण्यासाठी मोडल उघडताना सर्व इनपुट रिकामे करणे
 window.openAddLeadModal = function() {
-    window.currentEditingLeadId = null; // एडिट मोड क्लिअर केला
+    window.currentEditingLeadId = null; 
     if (document.getElementById('modal-title')) document.getElementById('modal-title').value = "";
     if (document.getElementById('modal-cat')) document.getElementById('modal-cat').value = "";
     if (document.getElementById('modal-desc')) document.getElementById('modal-desc').value = "";
@@ -216,9 +215,8 @@ window.openAddLeadModal = function() {
     }
 };
 
-// एडिट बटन दाबल्यावर डेटा मोडलमध्ये भरून मोडल उघडणे
 window.openEditLeadModal = function (id, title, category, description) {
-    window.currentEditingLeadId = id; // आयडी सेव्ह केला
+    window.currentEditingLeadId = id; 
 
     if (document.getElementById('modal-title')) document.getElementById('modal-title').value = title;
     if (document.getElementById('modal-cat')) document.getElementById('modal-cat').value = category;
@@ -241,7 +239,6 @@ window.loadAdminDash = async function() {
     } catch (e) { console.error(e); }
 };
 
-// नवीन लीड सेव्ह करणे किंवा जुनी एडिट करणे (Firebase `updateDoc`)
 window.submitNewLead = async function (e) {
     e.preventDefault();
     const title = document.getElementById('modal-title')?.value;
@@ -253,22 +250,14 @@ window.submitNewLead = async function (e) {
 
     try {
         if (window.currentEditingLeadId) {
-            // जर `currentEditingLeadId` असेल तर अपडेट (Edit) करा
             await updateDoc(doc(db, "published_leads", window.currentEditingLeadId), {
-                title: title, 
-                category: cat, 
-                description: desc
+                title: title, category: cat, description: desc
             });
             window.currentEditingLeadId = null;
             alert("Lead updated successfully!");
         } else {
-            // नसेल तर नवीन लीड ॲड करा
             await addDoc(collection(db, "published_leads"), {
-                title: title, 
-                category: cat, 
-                description: desc, 
-                status: "Active", 
-                timestamp: serverTimestamp()
+                title: title, category: cat, description: desc, status: "Active", timestamp: serverTimestamp()
             });
             alert("Lead published successfully!");
         }
@@ -279,10 +268,7 @@ window.submitNewLead = async function (e) {
         e.target.reset();
         window.loadAdminLeads();
         window.loadAdminDash();
-    } catch (err) { 
-        console.error(err); 
-        alert("Failed to save lead.");
-    } finally {
+    } catch (err) { console.error(err); } finally {
         if (btn) btn.innerText = "Publish Lead";
     }
 };
@@ -310,7 +296,6 @@ window.loadAdminLeads = async function() {
             const data = d.data();
             const id = d.id;
 
-            // डेटा मधील अवतरण चिन्हांमुळे (Quotes) कोड क्रॅश होऊ नये म्हणून फिक्स
             const safeTitle = (data.title || "").replace(/'/g, "\\'").replace(/"/g, '\\"');
             const safeCat = (data.category || "").replace(/'/g, "\\'").replace(/"/g, '\\"');
             const safeDesc = (data.description || "").replace(/'/g, "\\'").replace(/"/g, '\\"');
@@ -332,11 +317,18 @@ window.loadAdminLeads = async function() {
     } catch (e) { console.error(e); }
 };
 
+// ==========================================
+// 06. CONTACT FORM ENQUIRIES STATUS SYNC ENGINE (Screenshot Fixed)
+// ==========================================
 window.updateContactStatus = async function (id, newStatus) {
     try {
+        // Firebase मध्ये अचूक स्टेटस बदल सेव्ह करणे
         await updateDoc(doc(db, "contact_submissions", id), { status: newStatus });
+        // टेबल आणि कानबान व्ह्यू रीलोड करणे
         window.loadContactFormsAndKanban();
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+        console.error("Status update error: ", err); 
+    }
 };
 
 window.loadContactFormsAndKanban = async function() {
@@ -347,28 +339,53 @@ window.loadContactFormsAndKanban = async function() {
     try {
         const snap = await getDocs(collection(db, "contact_submissions"));
         let tableHtml = '';
+        const kb = { NEW: '', CONTACTED: '', IN_PROGRESS: '', CONVERTED: '', LOST: '' };
 
         snap.forEach(d => {
             const data = d.data();
             const id = d.id;
             const s = data.status || "NEW";
 
+            // स्क्रीनशॉट प्रमाणे बॅजचे कलर्स मॅनेज करणे
+            let sBadgeStyle = 'background:#e0f2fe; color:#0369a1;'; // Default NEW (Blue)
+            if (s === 'CONTACTED') sBadgeStyle = 'background:#fef3c7; color:#d97706;'; // Yellow/Orange
+            if (s === 'IN_PROGRESS') sBadgeStyle = 'background:#f3e8ff; color:#6b21a8;'; // Purple
+            if (s === 'CONVERTED') sBadgeStyle = 'background:#e6f4ea; color:#137333;'; // Green
+            if (s === 'LOST') sBadgeStyle = 'background:#fee2e2; color:#991b1b;'; // Red
+
+            // स्क्रीनशॉट प्रमाणे अचूक टेबल रो (Row) तयार करणे
             tableHtml += `
             <tr style="border-bottom:1px solid #edf2f7;">
                 <td style="padding:16px; font-weight:600;">${data.name}</td>
                 <td style="padding:16px;">${data.email}</td>
                 <td style="padding:16px;">${data.phone}</td>
                 <td style="padding:16px;">${data.message}</td>
-                <td style="padding:16px;"><span class="badge" style="background:#fef3c7; color:#d97706; padding:4px 10px; border-radius:12px;">${s}</span></td>
-                <td style="padding:16px; display:flex; gap:6px;">
-                    <button onclick="window.updateContactStatus('${id}','CONTACTED')" style="background:#2563eb; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:12px; cursor:pointer;">Contact</button>
-                    <button onclick="window.updateContactStatus('${id}','IN_PROGRESS')" style="background:#7c3aed; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:12px; cursor:pointer;">Progress</button>
-                    <button onclick="window.updateContactStatus('${id}','CONVERTED')" style="background:#16a34a; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:12px; cursor:pointer;">Convert</button>
-                    <button onclick="window.updateContactStatus('${id}','LOST')" style="background:#dc2626; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:12px; cursor:pointer;">Lost</button>
+                <td style="padding:16px;">
+                    <span class="badge" style="${sBadgeStyle} padding:6px 14px; border-radius:12px; font-size:12px; font-weight:600; text-transform:uppercase;">${s}</span>
+                </td>
+                <td style="padding:16px;">
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="window.updateContactStatus('${id}','CONTACTED')" style="background:#2563eb; color:white; border:none; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">Contact</button>
+                        <button onclick="window.updateContactStatus('${id}','IN_PROGRESS')" style="background:#7c3aed; color:white; border:none; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">Progress</button>
+                        <button onclick="window.updateContactStatus('${id}','CONVERTED')" style="background:#16a34a; color:white; border:none; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">Convert</button>
+                        <button onclick="window.updateContactStatus('${id}','LOST')" style="background:#dc2626; color:white; border:none; padding:6px 12px; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer;">Lost</button>
+                    </div>
                 </td>
             </tr>`;
+
+            const cardMarkup = `<div class="kanban-card" style="background:white; padding:14px; border-radius:4px; box-shadow:0 1px 3px rgba(0,0,0,0.1); margin-bottom:10px; border-left:4px solid #2563eb; font-weight:600; font-size:13px;">${data.name}</div>`;
+            if (kb[s] !== undefined) kb[s] += cardMarkup;
         });
+
         tbody.innerHTML = tableHtml || '<tr><td colspan="6" style="text-align:center; padding:20px;">No records found.</td></tr>';
+
+        // Kanban बोर्ड देखील सिंक ठेवणे
+        const tabs = ['new', 'contacted', 'inprogress', 'converted', 'lost'];
+        tabs.forEach(t => {
+            const el = document.getElementById(`kb-${t}`);
+            if (el) el.innerHTML = kb[t.toUpperCase().replace('INPROGRESS', 'IN_PROGRESS')] || '<div style="color:#94a3b8; font-size:12px; text-align:center; padding:10px;">No Leads</div>';
+        });
+
     } catch (e) { console.error(e); }
 };
 
