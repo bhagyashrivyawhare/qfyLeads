@@ -28,6 +28,8 @@ try {
 // Global State Management
 let allPublishedLeads = [];
 let currentCategoryFilter = 'All';
+// ग्लोबल व्हेरिएबल - जेणेकरून सिस्टमला समजेल कोणती लीड एडिट करायची आहे
+window.currentEditingLeadId = null;
 
 // ==========================================
 // 02. CORE APPLICATION ROUTING (SPA Engine)
@@ -255,8 +257,34 @@ window.switchAdminTab = function (tabName) {
 };
 
 window.openAddLeadModal = () => {
+    window.currentEditingLeadId = null; // एडिट मोड बंद करा
+    
+    if (document.getElementById('modal-title')) document.getElementById('modal-title').value = "";
+    if (document.getElementById('modal-cat')) document.getElementById('modal-cat').value = "";
+    if (document.getElementById('modal-desc')) document.getElementById('modal-desc').value = "";
+
     const modal = document.getElementById('add-lead-modal');
-    if (modal) modal.classList.remove('hidden');
+    if (modal) {
+        modal.classList.remove('hidden');
+        const submitBtn = modal.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.innerText = "Publish Lead";
+    }
+};
+
+// एडिट करण्यासाठी मोडल ओपन करणारे नवीन फंक्शन
+window.openEditLeadModal = function (id, title, category, description) {
+    window.currentEditingLeadId = id; // एडिट होत असलेल्या लीडचा Firebase ID सेव्ह केला
+
+    if (document.getElementById('modal-title')) document.getElementById('modal-title').value = title;
+    if (document.getElementById('modal-cat')) document.getElementById('modal-cat').value = category;
+    if (document.getElementById('modal-desc')) document.getElementById('modal-desc').value = description;
+
+    const modal = document.getElementById('add-lead-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        const submitBtn = modal.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.innerText = "Update Lead";
+    }
 };
 
 // --- Tab Module 1: Core Dashboard Operational Metrics ---
@@ -283,10 +311,26 @@ window.submitNewLead = async function (e) {
     const cat = document.getElementById('modal-cat')?.value;
     const desc = document.getElementById('modal-desc')?.value;
 
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn ? btn.innerText : "Submit";
+    if (btn) btn.innerText = "Saving...";
+
     try {
-        await addDoc(collection(db, "published_leads"), {
-            title, category: cat, description: desc, status: "Active", timestamp: serverTimestamp()
-        });
+        if (window.currentEditingLeadId) {
+            // जर एडिट मोड चालू असेल तर तो डॉक्युमेंट अपडेट करा
+            await updateDoc(doc(db, "published_leads", window.currentEditingLeadId), {
+                title, category: cat, description: desc
+            });
+            window.currentEditingLeadId = null;
+            alert("Lead updated successfully!");
+        } else {
+            // नसेल तर नवीन लीड ॲड करा
+            await addDoc(collection(db, "published_leads"), {
+                title, category: cat, description: desc, status: "Active", timestamp: serverTimestamp()
+            });
+            alert("Lead published successfully!");
+        }
+
         const modal = document.getElementById('add-lead-modal');
         if (modal) modal.classList.add('hidden');
         
@@ -296,6 +340,8 @@ window.submitNewLead = async function (e) {
     } catch (err) { 
         console.error("Error committing dynamic item framework creation logic:", err); 
         alert("Failed to write lead document configuration parameters."); 
+    } finally {
+        if (btn) btn.innerText = originalText;
     }
 };
 
@@ -304,6 +350,7 @@ window.deletePublishedLead = async function (id) {
     try {
         await deleteDoc(doc(db, "published_leads", id));
         loadAdminLeads();
+        loadAdminDash();
     } catch (err) {
         console.error("Delete operation baseline dropped:", err);
     }
@@ -324,7 +371,13 @@ async function loadAdminLeads() {
         let html = '';
         snap.forEach(d => {
             const data = d.data();
+            const id = d.id;
             const badgeColor = data.category === 'Finance' ? 'badge-light-blue' : (data.category === 'B2B' ? 'badge-light-purple' : 'badge-light-green');
+
+            // कोट्समुळे (Quotes) कोड ब्रेक होऊ नये म्हणून सुरक्षित स्ट्रिंग्स बनवणे
+            const safeTitle = (data.title || "").replace(/'/g, "\\'").replace(/"/g, '\\"');
+            const safeCat = (data.category || "").replace(/'/g, "\\'").replace(/"/g, '\\"');
+            const safeDesc = (data.description || "").replace(/'/g, "\\'").replace(/"/g, '\\"');
 
             html += `
             <tr style="border-bottom:1px solid #edf2f7;">
@@ -332,7 +385,10 @@ async function loadAdminLeads() {
                 <td style="padding:16px;"><span class="badge ${badgeColor}" style="padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">${data.category}</span></td>
                 <td style="padding:16px;"><span class="badge badge-light-green" style="background:#e6f4ea; color:#137333; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">Active</span></td>
                 <td style="padding:16px;">
-                    <button class="btn-sm bg-red" onclick="window.deletePublishedLead('${d.id}')" style="background:#dc2626; color:var(--white); border:none; padding:6px 14px; border-radius:var(--radius-sm); font-weight:600; font-size:12px; cursor:pointer; transition:var(--transition);">Delete</button>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-sm" onclick="window.openEditLeadModal('${id}', '${safeTitle}', '${safeCat}', '${safeDesc}')" style="background:#f59e0b; color:var(--white); border:none; padding:6px 14px; border-radius:var(--radius-sm); font-weight:600; font-size:12px; cursor:pointer; transition:var(--transition);"><i class="fa-solid fa-pen"></i> Edit</button>
+                        <button class="btn-sm bg-red" onclick="window.deletePublishedLead('${id}')" style="background:#dc2626; color:var(--white); border:none; padding:6px 14px; border-radius:var(--radius-sm); font-weight:600; font-size:12px; cursor:pointer; transition:var(--transition);">Delete</button>
+                    </div>
                 </td>
             </tr>`;
         });
@@ -358,9 +414,7 @@ window.deleteContactForm = async function (id) {
     try {
         await deleteDoc(doc(db, "contact_submissions", id));
         loadContactFormsAndKanban();
-    } catch (err) {
-        console.error("Record purge failed:", err);
-    }
+    } catch (err) return;
 };
 
 async function loadContactFormsAndKanban() {
